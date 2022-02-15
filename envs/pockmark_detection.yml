@@ -11,5 +11,6 @@ dependencies:
   - seaborn
   - pandas
   - gdal
+  - geopandas
   - pip:
     - opencv-python
