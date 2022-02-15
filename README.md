@@ -10,6 +10,8 @@ It will also hold an annotation set that can be added to for further enhancement
 
 Code to run preprocessing tools, the detectors, and post-processing tools is included in pockmark_detection_main.py. 
 
+See ![yolov5 repo](https://github.com/ultralytics/yolov5) and ![pix2pix repo](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for those two models original source code.
+
 # Requirements
 
 Hardware: Windows machine with NVIDIA graphics card
@@ -44,7 +46,6 @@ This will do the following:
 4. Convert the bathy grid and yolo/pix2pix shapefiles into kmls.
 
 Timed elapsed for entire script (tiling, conversion, model runs, gis file construction) on Passamaquoddy Bay: ~45 minutes
-
 
 # Troubleshooting Errors
 
