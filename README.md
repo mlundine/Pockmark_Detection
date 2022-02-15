@@ -43,4 +43,13 @@ This will do the following:
 3. Convert the yolo and pix2pix outputs into shapefiles.
 4. Convert the bathy grid and yolo/pix2pix shapefiles into kmls.
 
-Timed elapsed for entire script (tiling, conversion, model runs, gis file construction) on Passamaquoddy Bay: 
+Timed elapsed for entire script (tiling, conversion, model runs, gis file construction) on Passamaquoddy Bay: ~45 minutes
+
+
+# Troubleshooting Errors
+
+Make sure all requirements are downloaded to the correct environments. Sometimes libaries need to be downloaded manually.
+
+Make sure the input grid is a single band geotiff containing bathymetry values. Also make sure the grid contains pockmarks.
+
+Make sure you are using a Windows10 machine with NVIDIA graphics card. This code will not work with a Mac. 
