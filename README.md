@@ -1,5 +1,9 @@
 # Pockmark_Detection
 
+![yolo](/images/pass_dem_yolo.png)
+
+![pix2pix](/images/pass_dem_gan.png)
+
 This repository will hold trained pockmark detectors, including a YOLOv5 CNN and a pix2pix GAN.
 
 It will also hold an annotation set that can be added to for further enhancement of the detectors.
