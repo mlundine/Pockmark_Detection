@@ -1,0 +1,22 @@
+name: yolo_pockmark
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - conda
+  - matplotlib
+  - numpy
+  - Pillow
+  - PyYAML
+  - scipy
+  - tensorboard
+  - pytorch
+  - torchvision
+  - tqdm
+  - seaborn
+  - pandas
+  - cudatoolkit=10.2
+  - pip:
+    - opencv-python
