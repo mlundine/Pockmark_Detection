@@ -179,7 +179,7 @@ def process_detection_results(yolo_results,
                           gan_geotiff_outputs,
                           geotiff_tiles,
                           epsg)
-    print('GAN pngs converted to pngs')
+    print('GAN pngs converted to geotiffs')
     
     #gan geotiff to shape
     gda.raster_to_polygon_batch(gan_geotiff_outputs)
@@ -253,10 +253,4 @@ def main(input_dem,
     ##Step 4: Google Earth Outputs
     google_earth_outputs(input_dem, yolo_shape, filtered_gan_shape, tile_folder)
     print('Google Earth files written')
-
-start = timeit.timeit()
-main(r'D:\Pockmarks\DEM_Data\FullPassGrid\passBay_dem.tif',
-     2953)
-end = timeit.timeit()
-print(end - start)
 
