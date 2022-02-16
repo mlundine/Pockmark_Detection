@@ -53,10 +53,20 @@ This will do the following:
 3. Convert the yolo and pix2pix outputs into shapefiles.
 4. Convert the bathy grid and yolo/pix2pix shapefiles into kmls.
 
-# Troubleshooting Errors
+# Troubleshooting
 
 Make sure all requirements are downloaded to the correct environments. Sometimes libaries need to be downloaded manually.
 
 Make sure the input grid is a single band geotiff containing bathymetry values. Also make sure the grid contains pockmarks.
 
-Make sure you are using a Windows10 machine with NVIDIA graphics card. This code will not work with a Mac. 
+Make sure you are using a Windows10 machine with NVIDIA graphics card. This code will not work with a Mac.
+
+# Examining/Improving Results
+
+Results should be examined/refined with GIS software.
+
+Running on new data might trick up the current models. Training them on new data will help them adapt.
+
+Bumping the threshold up (default is 0.24) for the yolo model will help limit false positives.
+
+Trying finer resolutions (up to 1m) for the input DEM can improve results. Including overlap in the tiles can help with edge effects.
