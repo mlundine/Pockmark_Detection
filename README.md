@@ -20,7 +20,7 @@ Software: Windows10, Anaconda
 
 Python Libraries: All requirements are listed in three environment files (pockmark_detection.yml, yolo_pockmark.yml, and pix2pix_pockmark.yml).
 
-Use conda to create these three environemnts.
+Use conda to create these three environments.
 
 conda env create --file pockmark_detection.yml
 
