@@ -16,7 +16,7 @@ See ![yolov5 repo](https://github.com/ultralytics/yolov5) and ![pix2pix repo](ht
 
 Hardware: Windows machine with NVIDIA graphics card
 
-Software: Windows10, Anaconda
+Software: Windows10, Anaconda, Google Earth and/or QGIS to visualize results
 
 Python Libraries: All requirements are listed in three environment files (pockmark_detection.yml, yolo_pockmark.yml, and pix2pix_pockmark.yml).
 

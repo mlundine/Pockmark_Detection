@@ -1,6 +1,7 @@
 import os
 import warnings
 import glob
+from osgeo import gdal
 from gdal_modules import gdal_retile
 from gdal_modules import gdal_functions_app as gda
 import geopandas as gpd
@@ -11,6 +12,42 @@ import timeit
 warnings.filterwarnings('ignore')
 root = os.getcwd()
 
+def project_grid(path_to_input,
+                 path_to_output,
+                 output_epsg):
+    """
+    Projects raster into different coordinate system
+    inputs:
+    path_to_input: filepath to input raster
+    path_to_output: filepath to save the output raster
+    output_epsg: EPSG code (####) for output raster
+    outputs:
+    path_to_output: filepath to the output raster    
+    """
+    destination_epsg = 'EPSG:'+str(output_epsg)
+    warp = gdal.Warp(path_to_output,path_to_input,dstSRS=destination_epsg)
+    warp = None # Closes the files
+    return path_to_output
+
+def resize_grid(path_to_input,
+                path_to_output,
+                xres=1,
+                yres=1):
+    """
+    Resizes input raster
+    inputs:
+    path_to_input: filepath to input raster
+    path_to_output: filepath to save the output raster
+    xres: x cell size (length scale is determined by the input coordinate system, typically meters)
+    yres: y cell size (length scale is determined by the input coordinate system, typically meters)
+    outputs:
+    path_to_output: filepath to the output raster
+    """
+    resample_alg = 'near'
+    opt = gdal.WarpOptions(xRes=xres, yRes=yres, resampleAlg=resample_alg)
+    ds = gdal.Warp(path_to_output, path_to_input, options=opt)
+    ds = None
+    return path_to_output
 
 def tile_grid(path_to_input,
               path_to_output,
@@ -76,7 +113,7 @@ def run_yolo(source,
     cmd1 = 'python ' + yolo_detect + ' --weights '
     cmd2 = weights + ' --source ' + source
     cmd3 = ' --conf ' + str(threshold) + ' --project ' + output_folder
-    cmd4 = ' --save-txt --save-conf'
+    cmd4 = ' --save-txt --save-conf --img-size 256'
     full_cmd = cmd0+cmd1+cmd2+cmd3+cmd4
     os.system(full_cmd)
     yolo_results = os.path.join(output_folder, 'detect', 'labels')
@@ -196,7 +233,13 @@ def process_detection_results(yolo_results,
     map = gpd.read_file(yolo_shape)
     gan_df = gpd.read_file(gan_shape)
     intersect_polygons = gpd.sjoin(gan_df, map, op = 'intersects')
-    intersect_polygons.to_file(filtered_gan_shape)
+    intersect_polygons['area'] = intersect_polygons.geometry.area
+    subset = intersect_polygons[intersect_polygons['area']>20]
+    geoms = subset.geometry.unary_union
+    dissolved = gpd.GeoDataFrame(geometry=[geoms])
+    dissolved.crs = subset.crs
+    dissolved = dissolved.explode().reset_index(drop=True)
+    dissolved.to_file(filtered_gan_shape)
     print('Filtered GAN shapefile written')
 
     return yolo_shape, filtered_gan_shape
@@ -241,7 +284,9 @@ def main(input_dem,
     ##Step 2: Run models
     yolo_weights = os.path.join(root, 'trained_models', 'yolo', 'pockmark_yolov5s.pt')
     yolo_results = run_yolo(output_tile_folder_jpeg, yolo_weights, threshold)
+    print('Yolo results saved')
     gan_results = run_pix2pix(output_tile_folder_jpeg, num_images)
+    print('pix2pix results saved')
     
     ##Step 3: Process results
     yolo_shape, filtered_gan_shape = process_detection_results(yolo_results,
@@ -253,4 +298,5 @@ def main(input_dem,
     ##Step 4: Google Earth Outputs
     google_earth_outputs(input_dem, yolo_shape, filtered_gan_shape, tile_folder)
     print('Google Earth files written')
+
 
