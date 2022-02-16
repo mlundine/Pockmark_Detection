@@ -30,6 +30,14 @@ conda env create --file pix2pix_pockmark.yml
 
 # Running the models
 
+Download/clone this repo. 
+
+Also download the trained weights under Releases.
+
+Yolo weights (pockmark_yolov5s.pt) should be placed in Pockmark_Detection/trained_models/yolo.
+
+pix2pix weights (latest_net_D.pth and latest_net_G.pth) should be placed in Pockmark_Detection/pix2pix_modules/checkpoints/pockmark_gan.
+
 Open up Anaconda Prompt and activate the 'pockmark_detection' environment (conda activate pockmark_detection)
 
 Open pockmark_detection_main.py in IDLE or another Python IDE of your choice.
