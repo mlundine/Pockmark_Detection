@@ -92,6 +92,7 @@ B/test
 B/val
 
 To construct the training images for a pix2pix model, use setup_datasets(). 
+	
 	setup_datasets(home,
                        name,
                        foldA,
