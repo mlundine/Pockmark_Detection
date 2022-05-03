@@ -52,7 +52,7 @@ def resize_grid(path_to_input,
 def tile_grid(path_to_input,
               path_to_output,
               tile_size=256,
-              overlap=0):
+              overlap=25):
     """
     Takes a large bathymetry grid and slices it into square tiles
     Inputs:
@@ -158,7 +158,7 @@ def google_earth_outputs(dem, yolo_shape, gan_shape, tile_folder):
         pass
     #convert dem to superoverlay
     cmd0 = 'gdal_translate -scale -of KMLSUPEROVERLAY ' + dem + ' ' + superoverlay
-    os.system(cmd0)
+    #os.system(cmd0)
     #convert gan shapefile to kml
     cmd1 = 'ogr2ogr -f ' + '"'+'KML' + '" ' + yolo_kml + ' ' + yolo_shape
     os.system(cmd1)
@@ -244,7 +244,60 @@ def process_detection_results(yolo_results,
 
     return yolo_shape, filtered_gan_shape
 
+def setup_datasets(home,
+                   name,
+                   foldA,
+                   foldB):
+    """
+    Setups annotation pairs for pix2pix training
+    inputs:
+    home: parent directory for annotations (str) (ex: r'pix2pix_modules/datasets/MyProject')
+    name: project name (str)
+    foldA: path to A annotations (str)
+    foldB: path to B annotations (str)
+    """
+    root = os.getcwd()
+    combine = os.path.join(root, 'pix2pix_modules', 'datasets','combine_A_and_B.py')
+    cmd0 = 'conda deactivate & conda activate pix2pix_pockmark & '
+    cmd1 = 'python ' + combine 
+    cmd2 = ' --fold_A ' + foldA
+    cmd3 = ' --fold_B ' + foldB
+    cmd4 = ' --fold_AB ' + home
+    cmd5 = ' --no_multiprocessing'
+    full_cmd = cmd0+cmd1+cmd2+cmd3+cmd4+cmd5
+    os.system(full_cmd)
+    
+def train_model(model_name,
+                model_type,
+                dataroot,
+                n_epochs = 100):
+    """
+    Trains pix2pix or cycle-GAN model
+    inputs:
+    model_name: name for your model (str)
+    model_type: either 'pix2pix' or 'cycle-GAN' (str)
+    dataroot: path to training/test/val directories (str)
+    n_epochs (optional): number of epochs to train for (int)
+    """
+    root = os.getcwd()
+    pix2pix_train = os.path.join(root, 'pix2pix_modules', 'train.py')
 
+    cmd0 = 'conda deactivate & conda activate pix2pix_pockmark & '
+    cmd1 = 'python ' + pix2pix_train
+    cmd2 = ' --dataroot ' + dataroot
+    cmd3 = ' --model ' + model_type
+    cmd4 = ' --name ' + model_name#change this as input
+    cmd5 = ' --netG unet_256'
+    cmd6 = ' --netD basic'
+    cmd7 = ' --preprocess none'
+    cmd8 = ' --checkpoints_dir ' + os.path.join(root, 'pix2pix_modules', 'checkpoints')
+    cmd9 = ' --n_epochs ' + str(n_epochs)
+    cmd10 = ' --input_nc 1 --output_nc 1'
+    cmd11 = ' --display_id -1'
+    cmd12 = ' --gpu_ids 0'
+    full_cmd = cmd0+cmd1+cmd2+cmd3+cmd4+cmd5+cmd6+cmd7+cmd8+cmd9+cmd10+cmd11+cmd12
+    os.system(full_cmd)
+    print('Training Finished')
     
     
 def main(input_dem,
@@ -298,5 +351,6 @@ def main(input_dem,
     ##Step 4: Google Earth Outputs
     google_earth_outputs(input_dem, yolo_shape, filtered_gan_shape, tile_folder)
     print('Google Earth files written')
+
 
 

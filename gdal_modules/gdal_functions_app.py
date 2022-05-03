@@ -63,15 +63,19 @@ def gdal_get_coords_and_res(folder, saveFile):
     saveFile (string): filepath to csv to save to
     """
     
-    myList = []
-    myList.append(['file', 'xmin', 'ymin', 'xmax', 'ymax', 'xres', 'yres'])
-    for dem in glob.glob(folder + '/*.tif'):
+    
+    dems = glob.glob(folder + '/*.tif')
+    myList = [None]*(len(dems)+1)
+    myList[0] = ['file', 'xmin', 'ymin', 'xmax', 'ymax', 'xres', 'yres']
+    i=1
+    for dem in dems:
         src = gdal.Open(dem)
         xmin, xres, xskew, ymax, yskew, yres  = src.GetGeoTransform()
         xmax = xmin + (src.RasterXSize * xres)
         ymin = ymax + (src.RasterYSize * yres)
-        myList.append([dem, xmin, ymin, xmax, ymax, xres, -yres])
+        myList[i]=[dem, xmin, ymin, xmax, ymax, xres, -yres]
         src = None
+        i=i+1
     np.savetxt(saveFile, myList, delimiter=",", fmt='%s')
     df = pd.read_csv(saveFile)
     num_images = len(df)
