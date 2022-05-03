@@ -84,11 +84,17 @@ To re-train a yolov5 model, see github/mlundine/tensorflow_app or [yolov5 repo](
 To re-train a pix2pix model, you need bathy grids and masks (255 = pockmark, 0 = other), in jpeg or png format.
 These should be randomly split into a train (60%), test (20%), and validation (20%) set.
 Then they should be arranged into directories of this format:
+
 A/train
+
 A/test
+
 A/val
+
 B/train
+
 B/test
+
 B/val
 
 To construct the training images for a pix2pix model, use setup_datasets(). 
